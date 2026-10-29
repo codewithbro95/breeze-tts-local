@@ -1,0 +1,10 @@
+{
+  "instruction": "Male, late 20s-30s, neutral English accent. Calm, curious, intelligent voice. Conversational and naturally engaging, as if explaining an interesting idea to a smart friend. Clear articulation, warm vocal texture, and moderate pacing with short natural pauses. Makes complex technical concepts feel simple without sounding childish or overly academic. Uses subtle changes in tone, emphasis, and pacing to maintain attention. Confident but relaxed, occasionally showing genuine excitement when revealing an important insight or surprising fact. Ideal for machine learning, AI, software engineering, science, technology explainers, and AI news videos.",
+  "seed": 42,
+  "cfg_scale": 4,
+  "max_tokens": 400,
+  "temperature": 0.9,
+  "top_p": 1.0,
+  "top_k": 50,
+  "repetition_penalty": 1.0
+}

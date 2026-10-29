@@ -2,6 +2,13 @@
 
 from __future__ import annotations
 
+import platform
+
+if __name__ == "__main__" and platform.system() == "Darwin" and platform.machine() == "arm64":
+    from breeze_infer.apple_api import main
+    main()
+    raise SystemExit(0)
+
 import argparse
 import asyncio
 import hashlib

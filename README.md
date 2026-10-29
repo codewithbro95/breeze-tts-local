@@ -1,3 +1,91 @@
+# breeze-tts-local
+
+An adaptation of [Breeze TTS](https://github.com/breezeblue-ai/breeze-tts) for local inference, with MLX compatibility for Apple Silicon.
+
+## Why this exists
+
+I was looking for a really good offline text-to-speech model for personal use and
+found Breeze TTS. It sounded great, but the original repository did not work out
+of the box on my Apple Silicon Mac. I created this adaptation of the
+[original BreezeBlue repository](https://github.com/breezeblue-ai/breeze-tts)
+to make local inference work on macOS using MLX.
+
+This is an independent community adaptation, not an official BreezeBlue release.
+Credit for the original model and inference code belongs to BreezeBlue; the Mac
+runtime uses [MLX-Audio](https://github.com/Blaizzy/mlx-audio) and the
+[community 8-bit model conversion](https://huggingface.co/mlx-community/Breeze-TTS-2-mlx-8bit).
+The original source and its license are retained.
+
+## Quick start on Apple Silicon
+
+Requires an Apple Silicon Mac, Python 3.12, and [uv](https://docs.astral.sh/uv/).
+Tested on an M1 with 16 GB unified memory. Allow at least 8 GB of free disk space
+for the environment, model, and download cache. Initial setup needs internet;
+speech generation then runs locally with Hugging Face and Transformers offline
+modes enabled, without a hosted inference API.
+
+```bash
+git clone https://github.com/codewithbro95/breeze-tts-local.git
+cd breeze-tts-local
+UV_CACHE_DIR="$PWD/.cache/uv" uv venv --python 3.12 .venv
+UV_CACHE_DIR="$PWD/.cache/uv" uv pip install --python .venv/bin/python -r requirements-mlx.lock.txt
+source .venv/bin/activate
+python download_model.py
+
+python infer.py checkpoints/breeze-8bit \
+  --text "Machine learning helps computers discover patterns in data and use those patterns to make predictions." \
+  --seed 42 \
+  --output outputs/my-test.wav
+
+afplay outputs/my-test.wav
+```
+
+Models download into `checkpoints/`; the environment, caches, and generated audio
+stay under `.venv/`, `.cache/`, and `outputs/`. None of those directories is
+included in this repository. The downloader verifies weight-file SHA-256 hashes.
+
+## Voice defaults and commands
+
+The Mac default is the tested Research & News-style voice: a mature male in his
+50s–60s with Japanese-accented English, a dignified, measured tone, slight age rasp,
+and deliberate pauses. It uses seed **42** and guidance scale **4**. The settings
+are in [configs/apple.json](configs/apple.json). Use `--instruction`, `--seed`, and
+`--cfg-scale` to override them. Different text can change the generated delivery.
+
+The original `infer.py` command and API entry point are retained:
+
+```bash
+python -m breeze_infer.api checkpoints/breeze-8bit --host 127.0.0.1 --port 7860
+```
+
+See [MACOS.md](MACOS.md) for CLI, streaming, batch, cloning, and voice-direction
+usage, and [VALIDATION.md](VALIDATION.md) for the measured local test results.
+
+On macOS arm64 these commands dispatch to MLX. CUDA graph acceleration and the
+upstream NVIDIA Docker image remain NVIDIA-only. Batch items run sequentially on
+MLX, and inference requires a local MLX checkpoint path. This preserves the command
+formats, but does not claim every CUDA optimization is available on a Mac.
+
+## License and attribution
+
+The original [Apache-2.0 source-code license](LICENSE) is preserved unchanged.
+The model weights, converted weights, and self-hosted outputs have a **separate
+BreezeBlue research and non-commercial license**. Apache-2.0 does not grant
+commercial rights to the model or its outputs. Review the
+[model license](https://huggingface.co/BreezeBlue/Breeze-TTS-2/blob/main/LICENSE)
+before downloading or using it; commercial use requires separate written permission.
+The downloader retains the model's LICENSE and NOTICE files.
+
+## Original upstream documentation
+
+The documentation below is retained from
+[breezeblue-ai/breeze-tts](https://github.com/breezeblue-ai/breeze-tts).
+Its Linux/CUDA requirements and performance figures describe the upstream runtime.
+For this Mac adaptation, use the setup above and substitute `checkpoints/breeze-8bit`
+for the example `../breeze-tts-2` checkpoint path.
+
+---
+
 <div align="center">
   <a href="https://breezeblue.ai/"><img src="assets/breezeblue-logo.png" alt="BreezeBlue" width="35%"></a>
   <br><br>

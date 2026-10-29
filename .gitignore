@@ -17,3 +17,20 @@ htmlcov/
 .env.*
 !.env.example
 
+
+.venv/
+.cache/
+checkpoints/
+
+# Local model weights and interrupted downloads (wherever stored)
+*.safetensors
+*.gguf
+*.pt
+*.pth
+*.ckpt
+*.partial
+*.incomplete
+*.pcm
+*.mp3
+*.flac
+venv/
